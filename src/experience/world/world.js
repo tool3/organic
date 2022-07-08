@@ -8,10 +8,15 @@ export default class World {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
 
-    this.resources.on('ready', () => {
+    if (this.resources.sources.length) {
+      this.resources.on('ready', () => {
+        this.shader = new Shader();
+        this.environment = new Environment();
+      });
+    } else {
       this.shader = new Shader();
       this.environment = new Environment();
-    });
+    }
   }
 
   update() {
