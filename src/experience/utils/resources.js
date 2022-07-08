@@ -14,7 +14,7 @@ export default class Resources extends EventEmitter {
 
   setLoaders() {
     this.loaders = {};
-    console.log(this.sources);
+    
     for (const source of this.sources) {
       if (!this.loaders[source.loader]) {
         this.loaders[source.loader] = new source.loader();
