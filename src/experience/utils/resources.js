@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import EventEmitter from './eventEmitter';
 
 export default class Resources extends EventEmitter {
@@ -9,13 +7,14 @@ export default class Resources extends EventEmitter {
     this.items = {};
     this.total = this.sources.length;
     this.loaded = 0;
-
+    
     this.setLoaders();
     this.load();
   }
 
   setLoaders() {
     this.loaders = {};
+    console.log(this.sources);
     for (const source of this.sources) {
       if (!this.loaders[source.loader]) {
         this.loaders[source.loader] = new source.loader();
