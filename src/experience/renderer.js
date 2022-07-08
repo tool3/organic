@@ -56,8 +56,8 @@ export default class Renderer {
     // Bloom pass
     this.postProcess.unrealBloomPass = new UnrealBloomPass(
       new THREE.Vector2(this.sizes.width, this.sizes.height),
-      0.8,
-      0.315,
+      1.5,
+      0.6,
       0
     );
     this.postProcess.unrealBloomPass.enabled = true;
@@ -71,7 +71,7 @@ export default class Renderer {
     this.postProcess.unrealBloomPass.compositeMaterial.uniforms.uTintColor = {
       value: this.postProcess.unrealBloomPass.tintColor.instance
     };
-    this.postProcess.unrealBloomPass.compositeMaterial.uniforms.uTintStrength = { value: 0.15 };
+    this.postProcess.unrealBloomPass.compositeMaterial.uniforms.uTintStrength = { value: 0.05 };
     this.postProcess.unrealBloomPass.compositeMaterial.fragmentShader = `
 varying vec2 vUv;
 uniform sampler2D blurTexture1;
