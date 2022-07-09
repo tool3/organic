@@ -18,16 +18,10 @@ export default class Shader {
     }
 
     window.addEventListener('click', (e) => {
-      e.preventDefault();
       this.animate();
     });
 
     window.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      if (e.touches.length >= 3) {
-        this.debug.active = !this.debug.active;
-        return;
-      }
       this.animate();
     });
 
