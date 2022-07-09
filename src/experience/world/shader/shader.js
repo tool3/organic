@@ -17,15 +17,15 @@ export default class Shader {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-    window.addEventListener('click', (e) =>  {
+    window.addEventListener('click', (e) => {
       e.preventDefault();
-      this.animate() 
+      this.animate();
     });
 
-    this.canvas.addEventListener('touchstart', (e) => {
+    window.addEventListener('touchstart', (e) => {
       e.preventDefault();
       if (e.touches.length >= 3) {
-        this.active = !this.active;
+        this.debug.active = !this.debug.active;
         return;
       }
       this.animate();
@@ -192,12 +192,14 @@ export default class Shader {
   }
 
   animate() {
-    gsap.to(this.material.uniforms.uDistortionStrength, {
-      value: Math.random() * -1.5,
-      duration: 3,
-      stagger: 0.2,
-      ease: 'expo.out'
-    });
+    if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
+      gsap.to(this.material.uniforms.uDistortionStrength, {
+        value: Math.random() * -1.5,
+        duration: 2,
+        stagger: 0.2,
+        ease: 'expo.out'
+      });
+    }
   }
 
   update() {
