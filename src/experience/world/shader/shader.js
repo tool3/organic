@@ -8,6 +8,7 @@ export default class Shader {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
+    this.canvas = this.experience.canvas;
     this.scene = this.experience.scene;
     this.renderer = this.experience.renderer;
     this.debug = this.experience.debug;
@@ -18,7 +19,7 @@ export default class Shader {
 
     window.addEventListener('click', (e) => this.animate());
 
-    window.addEventListener('touchstart', (e) => {
+    this.canvas.addEventListener('touchstart', (e) => {
       if (e.touches.length >= 3) {
         this.active = !this.active;
         return;
