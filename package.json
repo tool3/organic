@@ -15,6 +15,7 @@
     "dat.gui": "^0.7.9",
     "file-loader": "^6.2.0",
     "glslify-loader": "^2.0.0",
+    "gsap": "^3.10.4",
     "html-loader": "^3.0.0",
     "html-webpack-plugin": "^5.5.0",
     "lil-gui": "^0.11.0",

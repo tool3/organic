@@ -17,6 +17,12 @@ export default class Debug {
       }
     });
 
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length >= 3) {
+        this.active = !this.active;
+      }
+    });
+
     this.active = window.location.hash === '#debug';
     if (this.active) {
       this.ui = new Pane();

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import Experience from '../../experience';
 import vertexShader from './shaders/sphere/vertex.glsl';
 import fragmentShader from './shaders/sphere/fragment.glsl';
@@ -14,6 +15,15 @@ export default class Shader {
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
+
+    window.addEventListener('click', (e) => {
+      gsap.to(this.material.uniforms.uDistortionStrength, {
+        value: Math.random() * -1.5,
+        duration: 3,
+        stagger: 0.2,
+        ease: 'expo.out'
+      });
+    });
 
     this.setGeometry();
     this.setTextures();
@@ -129,7 +139,6 @@ export default class Shader {
         step: 0.001
       });
 
-    
       this.debugFolder.addInput(this.material.uniforms.uLightAColor, 'value', {
         label: 'uLightAColor',
         min: 0,

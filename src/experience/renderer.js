@@ -39,7 +39,6 @@ export default class Renderer {
     this.instance.toneMappingExposure = 1.75;
     this.instance.shadowMap.enabled = true;
     this.instance.shadowMap.type = THREE.PCFSoftShadowMap;
-    // this.instance.setClearColor('#211d20');
     this.instance.setSize(this.sizes.width, this.sizes.height);
     this.instance.setPixelRatio(this.sizes.pixelRatio);
   }
@@ -47,10 +46,6 @@ export default class Renderer {
   setPostProcess() {
     this.postProcess = {};
 
-    /**
-     * Passes
-     */
-    // Render pass
     this.postProcess.renderPass = new RenderPass(this.scene, this.camera.instance);
 
     // Bloom pass
@@ -132,7 +127,6 @@ void main() {
      * Effect composer
      */
     const RenderTargetClass = this.sizes.pixelRatio >= 2 ? THREE.WebGLRenderTarget : THREE.WebGLMultisampleRenderTarget;
-    // const RenderTargetClass = THREE.WebGLRenderTarget
     this.renderTarget = new RenderTargetClass(this.sizes.width, this.sizes.height, {
       generateMipmaps: false,
       minFilter: THREE.LinearFilter,
