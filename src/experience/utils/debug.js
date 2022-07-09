@@ -13,7 +13,7 @@ export default class Debug {
   }
 
   toggle(e) {
-    if ((e.key === 'D' && e.shiftKey) || e.touches.length >= 3) {
+    if ((e.key === 'D' && e.shiftKey) || (e.touches && e.touches.length >= 3)) {
       this.active = !this.active;
       const hash = '#debug';
       window.location.hash = hash;
