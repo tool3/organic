@@ -9,6 +9,8 @@ export default class Shader {
     this.experience = new Experience();
     this.time = this.experience.time;
     this.canvas = this.experience.canvas;
+    this.camera = this.experience.camera;
+    this.resources = this.experience.resources;
     this.scene = this.experience.scene;
     this.renderer = this.experience.renderer;
     this.debug = this.experience.debug;
@@ -29,6 +31,7 @@ export default class Shader {
     this.setTextures();
     this.setMaterials();
     this.setMesh();
+    this.setAudio();
   }
 
   setGeometry() {
@@ -185,6 +188,19 @@ export default class Shader {
     this.scene.add(this.mesh);
   }
 
+  setAudio() {
+    console.log(this.resources.items.clair_de_lune);
+    const listener = new THREE.AudioListener();
+    this.camera.instance.add(listener);
+    const sound = new THREE.Audio(listener);
+    sound.setBuffer(this.resources.items.clair_de_lune);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+
+    this.analyser = new THREE.AudioAnalyser(sound, 32);
+  }
+
   animate() {
     if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
       gsap.to(this.material.uniforms.uDistortionStrength, {
@@ -198,5 +214,17 @@ export default class Shader {
 
   update() {
     this.material.uniforms.uTime.value = this.time.getElapsedTime();
+    const soundFrequency = this.analyser.getAverageFrequency() / 50;
+    console.log(soundFrequency);
+    // if (soundFrequency > 0.4) {
+      // this.material.uniforms.uDistortionStrength.value = soundFrequency;
+      if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
+        gsap.to(this.material.uniforms.uDistortionStrength, {
+          value: soundFrequency,
+          duration: 0.1,
+          ease: 'none'
+        });
+      }
+    // }
   }
 }

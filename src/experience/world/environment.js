@@ -10,7 +10,7 @@ export default class Environment {
 
     this.setSunLight();
 
-    if (this.resources.sources.length) {
+    if (this.resources.sources.length && this.resources.items.envMap) {
       this.setEnvMap();
     }
   }
