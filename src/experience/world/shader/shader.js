@@ -16,14 +16,14 @@ export default class Shader {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-    window.addEventListener('click', (e) => animate());
+    window.addEventListener('click', (e) => this.animate());
 
     window.addEventListener('touchstart', (e) => {
       if (e.touches.length >= 3) {
         this.active = !this.active;
         return;
       }
-      animate();
+      this.animate();
     });
 
     this.setGeometry();
