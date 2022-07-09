@@ -16,13 +16,14 @@ export default class Shader {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-    window.addEventListener('click', (e) => {
-      gsap.to(this.material.uniforms.uDistortionStrength, {
-        value: Math.random() * -1.5,
-        duration: 3,
-        stagger: 0.2,
-        ease: 'expo.out'
-      });
+    window.addEventListener('click', (e) => animate());
+
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length >= 3) {
+        this.active = !this.active;
+        return;
+      }
+      animate();
     });
 
     this.setGeometry();
@@ -183,6 +184,15 @@ export default class Shader {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.rotation.y = -Math.PI;
     this.scene.add(this.mesh);
+  }
+
+  animate() {
+    gsap.to(this.material.uniforms.uDistortionStrength, {
+      value: Math.random() * -1.5,
+      duration: 3,
+      stagger: 0.2,
+      ease: 'expo.out'
+    });
   }
 
   update() {
