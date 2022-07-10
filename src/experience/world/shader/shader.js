@@ -30,6 +30,10 @@ export default class Shader {
 
     window.addEventListener('touchstart', (e) => {
       this.animate();
+      if (!audioSet) {
+        this.setAudio();
+        audioSet = true;
+      }
     });
 
     this.setGeometry();
