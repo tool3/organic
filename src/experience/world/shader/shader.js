@@ -218,7 +218,7 @@ export default class Shader {
     if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
       gsap.to(this.material.uniforms.uDistortionStrength, {
         value: Math.random() * -1.5,
-        duration: 2,
+        duration: 1,
         stagger: 0.2,
         ease: 'expo.out'
       });
@@ -228,20 +228,32 @@ export default class Shader {
   update() {
     this.material.uniforms.uTime.value = this.time.getElapsedTime();
     if (this.analyser) {
-      
       const soundFrequency = this.analyser.getAverageFrequency() / 50;
-      if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
-        gsap.to(this.material.uniforms.uDistortionStrength, {
-          value: soundFrequency,
+
+      if (!gsap.isTweening(this.material.uniforms.uSpeed) && soundFrequency > 0.1) {
+        const speed = soundFrequency / 10 > 0.1 ? soundFrequency / 10 : 0.1;
+        gsap.to(this.material.uniforms.uSpeed, {
+          value: speed,
           // duration: 0.1,
-          ease: 'none'
+          ease: 'expo.out'
         });
       }
+
+      // if (!gsap.isTweening(this.material.uniforms.uDisplacementStrength)) {
+      //   console.log(soundFrequency);
+      // if (soundFrequency > 0.6) {
+      //   this.material.uniforms.uDisplacementStrength.value = soundFrequency / 4;
+      // }
+      // gsap.to(this.material.uniforms.uDistortionStrength, {
+      //   value: soundFrequency / 2,
+      //   ease: 'none'
+      // });
+      // }
+      // }
 
       if (!gsap.isTweening(this.material.uniforms.uLightAColor) && soundFrequency > 0.6) {
         gsap.to(this.material.uniforms.uLightAColor.value, {
           ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
-          duration: 0.2,
           ease: 'none'
         });
       }
@@ -249,7 +261,6 @@ export default class Shader {
       if (!gsap.isTweening(this.material.uniforms.uLightBColor) && soundFrequency > 0.6) {
         gsap.to(this.material.uniforms.uLightBColor.value, {
           ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
-          duration: 0.2,
           ease: 'none'
         });
       }
