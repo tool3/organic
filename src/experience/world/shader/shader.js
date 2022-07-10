@@ -19,8 +19,13 @@ export default class Shader {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
+    let audioSet = false;
     window.addEventListener('click', (e) => {
       this.animate();
+      if (!audioSet) {
+        this.setAudio();
+        audioSet = true;
+      }
     });
 
     window.addEventListener('touchstart', (e) => {
@@ -31,11 +36,9 @@ export default class Shader {
     this.setTextures();
     this.setMaterials();
     this.setMesh();
-    this.setAudio();
   }
 
   setGeometry() {
-    // this.geometry = new THREE.CircleGeometry(5, 64);
     this.geometry = new THREE.SphereBufferGeometry(1, 512, 512);
     this.geometry.shading = THREE.SmoothShading;
     this.geometry.computeTangents();
@@ -58,11 +61,11 @@ export default class Shader {
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: 0.1 },
-        uLightAColor: { value: new THREE.Color('#add8e6') },
+        uLightAColor: { value: new THREE.Color(0xadd8e6) },
         uLightAPosition: { value: new THREE.Vector3(1, 1, 0) },
         uLightAIntensity: { value: 0.5 },
 
-        uLightBColor: { value: new THREE.Color('#ff69b4') },
+        uLightBColor: { value: new THREE.Color(0xff69b4) },
         uLightBPosition: { value: new THREE.Vector3(-1, -1, 0) },
         uLightBIntensity: { value: 0.5 },
 
@@ -189,16 +192,22 @@ export default class Shader {
   }
 
   setAudio() {
-    console.log(this.resources.items.clair_de_lune);
-    const listener = new THREE.AudioListener();
-    this.camera.instance.add(listener);
-    const sound = new THREE.Audio(listener);
-    sound.setBuffer(this.resources.items.clair_de_lune);
-    sound.setLoop(true);
-    sound.setVolume(0.5);
-    sound.play();
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load('audio/clair_de_lune.mp3', (buffer) => {
+      this.listener = new THREE.AudioListener();
+      this.camera.instance.add(this.listener);
 
-    this.analyser = new THREE.AudioAnalyser(sound, 32);
+      this.sound = new THREE.Audio(this.listener);
+
+      this.sound.setBuffer(buffer);
+      this.sound.setLoop(true);
+      this.sound.setVolume(0.5);
+
+      this.sound.play();
+      // this.sound.context.resume();
+
+      this.analyser = new THREE.AudioAnalyser(this.sound, 32);
+    });
   }
 
   animate() {
@@ -214,17 +223,33 @@ export default class Shader {
 
   update() {
     this.material.uniforms.uTime.value = this.time.getElapsedTime();
-    const soundFrequency = this.analyser.getAverageFrequency() / 50;
-    console.log(soundFrequency);
-    // if (soundFrequency > 0.4) {
-      // this.material.uniforms.uDistortionStrength.value = soundFrequency;
+    if (this.analyser) {
+      // console.log(this.analyser.maxDecibels);
+      console.log(this.analyser.analyser);
+      const soundFrequency = this.analyser.getAverageFrequency() / 50;
       if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
         gsap.to(this.material.uniforms.uDistortionStrength, {
           value: soundFrequency,
-          duration: 0.1,
+          // duration: 0.1,
           ease: 'none'
         });
       }
-    // }
+
+      if (!gsap.isTweening(this.material.uniforms.uLightAColor) && soundFrequency > 0.6) {
+        gsap.to(this.material.uniforms.uLightAColor.value, {
+          ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
+          duration: 0.2,
+          ease: 'none'
+        });
+      }
+
+      if (!gsap.isTweening(this.material.uniforms.uLightBColor) && soundFrequency > 0.6) {
+        gsap.to(this.material.uniforms.uLightBColor.value, {
+          ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
+          duration: 0.2,
+          ease: 'none'
+        });
+      }
+    }
   }
 }

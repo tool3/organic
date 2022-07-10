@@ -7,9 +7,10 @@ export default class World {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-
+    
     if (this.resources.sources.length) {
       this.resources.on('ready', () => {
+        console.log('triggered');
         this.shader = new Shader();
         this.environment = new Environment();
       });
