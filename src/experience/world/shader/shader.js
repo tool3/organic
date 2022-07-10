@@ -208,7 +208,11 @@ export default class Shader {
       this.sound.setVolume(0.5);
 
       this.sound.play();
-      // this.sound.context.resume();
+      
+
+      const source = this.listener.context.createBufferSource();
+      source.connect(this.listener.context.destination);
+      source.start();
 
       this.analyser = new THREE.AudioAnalyser(this.sound, 32);
     });
