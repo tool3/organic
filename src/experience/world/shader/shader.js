@@ -228,8 +228,7 @@ export default class Shader {
   update() {
     this.material.uniforms.uTime.value = this.time.getElapsedTime();
     if (this.analyser) {
-      // console.log(this.analyser.maxDecibels);
-      console.log(this.analyser.analyser);
+      
       const soundFrequency = this.analyser.getAverageFrequency() / 50;
       if (!gsap.isTweening(this.material.uniforms.uDistortionStrength)) {
         gsap.to(this.material.uniforms.uDistortionStrength, {
