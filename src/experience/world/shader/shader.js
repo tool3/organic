@@ -20,7 +20,6 @@ export default class Shader {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-
     window.addEventListener('click', (e) => {
       this.animate();
       if (!this.audio) {
@@ -232,11 +231,14 @@ export default class Shader {
     if (this.analyser) {
       const soundFrequency = this.analyser.getAverageFrequency() / 50;
 
-      if (!gsap.isTweening(this.material.uniforms.uSpeed) && soundFrequency > 0.1) {
-        const speed = soundFrequency / 2;
+      if (!gsap.isTweening(this.material.uniforms.uSpeed)) {
+        const freq = soundFrequency / 6;
+        console.log(freq);
+        const speed = freq > 0.1 ? freq : 0.1;
         gsap.to(this.material.uniforms.uSpeed, {
           value: speed,
-          ease: 'expo.out'
+          duration: 0.3,
+          ease: 'power3.inOut'
         });
       }
 
