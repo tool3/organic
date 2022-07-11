@@ -14,25 +14,24 @@ export default class Shader {
     this.scene = this.experience.scene;
     this.renderer = this.experience.renderer;
     this.debug = this.experience.debug;
+    this.audio = null;
 
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-    let audioSet = false;
+
     window.addEventListener('click', (e) => {
       this.animate();
-      if (!audioSet) {
+      if (!this.audio) {
         this.setAudio();
-        audioSet = true;
       }
     });
 
     window.addEventListener('touchstart', (e) => {
       this.animate();
-      if (!audioSet) {
+      if (!this.audio) {
         this.setAudio();
-        audioSet = true;
       }
     });
 
@@ -201,20 +200,19 @@ export default class Shader {
       this.listener = new THREE.AudioListener();
       this.camera.instance.add(this.listener);
 
-      this.sound = new THREE.Audio(this.listener);
+      this.audio = new THREE.Audio(this.listener);
 
-      this.sound.setBuffer(buffer);
-      this.sound.setLoop(true);
-      this.sound.setVolume(0.5);
+      this.audio.setBuffer(buffer);
+      this.audio.setLoop(true);
+      this.audio.setVolume(0.5);
 
-      this.sound.play();
-      
+      this.audio.play();
 
       const source = this.listener.context.createBufferSource();
       source.connect(this.listener.context.destination);
       source.start();
 
-      this.analyser = new THREE.AudioAnalyser(this.sound, 32);
+      this.analyser = new THREE.AudioAnalyser(this.audio, 32);
     });
   }
 
@@ -235,25 +233,12 @@ export default class Shader {
       const soundFrequency = this.analyser.getAverageFrequency() / 50;
 
       if (!gsap.isTweening(this.material.uniforms.uSpeed) && soundFrequency > 0.1) {
-        const speed = soundFrequency / 10 > 0.1 ? soundFrequency / 10 : 0.1;
+        const speed = soundFrequency / 2;
         gsap.to(this.material.uniforms.uSpeed, {
           value: speed,
-          // duration: 0.1,
           ease: 'expo.out'
         });
       }
-
-      // if (!gsap.isTweening(this.material.uniforms.uDisplacementStrength)) {
-      //   console.log(soundFrequency);
-      // if (soundFrequency > 0.6) {
-      //   this.material.uniforms.uDisplacementStrength.value = soundFrequency / 4;
-      // }
-      // gsap.to(this.material.uniforms.uDistortionStrength, {
-      //   value: soundFrequency / 2,
-      //   ease: 'none'
-      // });
-      // }
-      // }
 
       if (!gsap.isTweening(this.material.uniforms.uLightAColor) && soundFrequency > 0.6) {
         gsap.to(this.material.uniforms.uLightAColor.value, {
