@@ -1,16 +1,4 @@
-# Three.js Journey
+# Organ1k
+a threeJS experiment inspired by [Organic Sphere](https://github.com/brunosimon/organic-sphere) by Bruno Simon
 
-## Setup
-Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
-
-``` bash
-# Install dependencies (only the first time)
-npm install
-
-# Run the local server at localhost:8080
-npm run dev
-
-# Build for production in the dist/ directory
-npm run build
-```
+Click once to get Claire De Lune play and control lighting
