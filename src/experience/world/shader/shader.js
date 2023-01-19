@@ -15,29 +15,62 @@ export default class Shader {
     this.renderer = this.experience.renderer;
     this.debug = this.experience.debug;
     this.audio = null;
+    this.playing = this.audio && this.audio.isPlaying;
 
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({ title: 'shader' });
     }
 
-    window.addEventListener('click', (e) => {
-      this.animate();
-      if (!this.audio) {
-        this.setAudio();
-      }
-    });
+    this.playButton = document.querySelector('.play');
+    this.pauseButton = document.querySelector('.pause'); 
 
-    window.addEventListener('touchstart', (e) => {
-      this.animate();
-      if (!this.audio) {
-        this.setAudio();
+    window.addEventListener('domcontentloaded', () => this.animate())
+  
+    window.addEventListener('keydown', ({code}) => {
+      if (code === 'Space' && !this.audio) {
+        this.playAudio()
       }
-    });
+
+      if (code === 'Space' && this.audio && this.audio.isPlaying) {
+        this.pauseAudio()
+        return;
+      } 
+      
+      if (code === 'Space' && this.audio && !this.audio.isPlaying) {
+        this.playAudio()
+      }
+    })
+    
+    this.playButton.addEventListener('click', (e) => this.playAudio());
+    this.pauseButton.addEventListener('click', (e) => this.pauseAudio());
 
     this.setGeometry();
     this.setTextures();
     this.setMaterials();
     this.setMesh();
+  }
+
+  playAudio() {
+    if (!this.audio) {
+      this.setAudio();
+    }
+    
+    if (this.audio) {
+      this.audio.play()
+    }
+   
+    
+    this.pauseButton.style.display = 'block';
+    this.playButton.style.display = 'none';
+  }
+
+  pauseAudio() {
+    if (this.audio) {
+      this.audio.pause();
+    }
+    
+    this.pauseButton.style.display = 'none';
+    this.playButton.style.display = 'block';
   }
 
   setGeometry() {
@@ -226,35 +259,29 @@ export default class Shader {
     }
   }
 
+  normalize(val, min, max) {
+    return min + (max - min) * val
+  }
+
   update() {
     this.material.uniforms.uTime.value = this.time.getElapsedTime();
-    if (this.analyser) {
-      const soundFrequency = this.analyser.getAverageFrequency() / 50;
+    // if (this.analyser) {
+    //   const soundFrequency = this.analyser.getAverageFrequency() / 50;
 
-      if (!gsap.isTweening(this.material.uniforms.uSpeed)) {
-        const freq = soundFrequency / 6;
-        console.log(freq);
-        const speed = freq > 0.1 ? freq : 0.1;
-        gsap.to(this.material.uniforms.uSpeed, {
-          value: speed,
-          duration: 0.3,
-          ease: 'power3.inOut'
-        });
-      }
+    //   const min = -1.7
+    //   const max = -1.3
+      
+    //   const a = this.normalize(soundFrequency, min, max)
 
-      if (!gsap.isTweening(this.material.uniforms.uLightAColor) && soundFrequency > 0.6) {
-        gsap.to(this.material.uniforms.uLightAColor.value, {
-          ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
-          ease: 'none'
-        });
-      }
-
-      if (!gsap.isTweening(this.material.uniforms.uLightBColor) && soundFrequency > 0.6) {
-        gsap.to(this.material.uniforms.uLightBColor.value, {
-          ...new THREE.Color(soundFrequency * 0xffffff * Math.random()),
-          ease: 'none'
-        });
-      }
-    }
+    //   console.log(a);
+      
+    //   if (!gsap.isTweening(this.material.uniforms.uFresnelOffset)) {
+    //     gsap.to(this.material.uniforms.uFresnelOffset, {
+    //       value: a,
+    //       duration: 0.1,
+    //       ease: 'power3.inOut'
+    //     });
+    //   }
+    // }
   }
 }

@@ -17,3 +17,32 @@ body {
   left: 0;
   outline: none;
 }
+
+
+.controls {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  margin: auto;
+  /* border: 1px solid red; */
+}
+
+.controls:hover {
+  cursor: pointer;
+}
+
+.controls .play {
+  display: block;
+  margin: auto;
+  width: 25px;
+  height: 25px;
+}
+
+.controls .pause {
+  display: none;
+  margin: auto;
+  position: relative;
+  right: 18px;
+  bottom: -45px;
+}
