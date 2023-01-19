@@ -3,7 +3,7 @@ a threeJS experiment inspired by [Organic Sphere](https://github.com/brunosimon/
 
 Soothing Claire De Lune experience.
 
-![](static/preview.gif)
+[![organ1k](static/preview.gif)](https://organ1k.vercel.app)
 
 
 # Controls
